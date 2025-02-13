@@ -24,7 +24,7 @@ variable "node_type" {
 
 variable "subnet_ids" {
   description = "EKS 서브넷 ID 목록"
-  type        = list(string)
+  type        = string
 }
 
 variable "vpc_id" {

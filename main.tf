@@ -7,7 +7,8 @@ module "vpc" {
   vpc_cidr            = "10.0.0.0/16"
   vpc_name            = "olive-young-vpc"
   public_subnet_cidr  = "10.0.1.0/24"
-  private_subnet_cidr = "10.0.2.0/24"
+  private1_subnet_cidr = "10.0.2.0/24"
+  private2_subnet_cidr = "10.0.3.0/24"
   availability_zone   = "ap-northeast-2a"
 }
 
@@ -24,7 +25,7 @@ module "bastion" {
 module "private-ec2" {
   source           = "./modules/private-ec2"
   vpc_name         = "olive-young-vpc"
-  private_subnet_id = module.vpc.private_subnet_id
+  private_subnet_id = module.vpc.private1_subnet_id
   ami_id           = "ami-0cee4e6a7532bb297"
   instance_type    = "t2.micro"
   private_ip       = "10.0.2.10"
@@ -38,9 +39,9 @@ module "eks" {
   cluster_name = var.cluster_name
   node_count   = var.node_count
   node_type    = var.node_type
-  subnet_ids   = var.subnet_ids
-  vpc_id       = var.vpc_id
-  nat_gateway  = var.nat_gateway
+  subnet_ids   = [module.vpc.private1_subnet_id, module.vpc.private2_subnet_id]
+  vpc_id       = module.vpc.vpc_id
+  nat_gateway  = module.vpc.nat_gateway_id
 }
 
 module "argocd" {

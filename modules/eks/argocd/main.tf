@@ -5,6 +5,8 @@ resource "helm_release" "argocd" {
   repository = "https://argoproj.github.io/argo-helm"
   version    = "5.46.9"
 
+  create_namespace = true
+
   set {
     name  = "server.service.type"
     value = "LoadBalancer"
@@ -15,5 +17,5 @@ resource "helm_release" "argocd" {
     value = "{--insecure}"
   }
 
-  depends_on = [aws_eks_cluster.eks]
+  depends_on = [var.cluster_endpoint] # EKS 클러스터가 생성된 후 실행
 }

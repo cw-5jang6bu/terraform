@@ -4,6 +4,13 @@ variable "aws_region" {
   default     = "ap-northeast-2"
 }
 
+variable "availability_zones" {
+  description = "List of availability zones to use"
+  type        = list(string)
+  default     = ["ap-northeast-2a", "ap-northeast-2c"]  # 원하는 AZ 추가
+}
+
+
 variable "cluster_name" {
   description = "EKS 클러스터 이름"
   type        = string

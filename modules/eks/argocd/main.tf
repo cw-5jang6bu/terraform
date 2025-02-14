@@ -3,7 +3,7 @@ resource "helm_release" "argocd" {
   namespace  = "argocd"
   chart      = "argo-cd"
   repository = "https://argoproj.github.io/argo-helm"
-  version    = "5.46.9"
+  version    = "7.8.1"
 
   create_namespace = true
 

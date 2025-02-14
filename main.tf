@@ -2,6 +2,19 @@ provider "aws" {
   region = var.aws_region
 }
 
+provider "helm" {
+  kubernetes {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_ca_cert)
+
+    exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      command     = "aws"
+      args        = ["eks", "get-token", "--region", var.aws_region, "--cluster-name", module.eks.cluster_name]
+    } # IAM 인증 추가
+  }
+}
+
 module "vpc" {
   source              = "./modules/vpc"
   vpc_cidr            = "10.0.0.0/16"
@@ -44,21 +57,10 @@ module "eks" {
 }
 
 module "argocd" {
-  source            = "./modules/eks/argocd"
+  source            = "./modules/argocd"
+  cluster_id = module.eks.cluster_id
   cluster_name      = module.eks.cluster_name
   cluster_endpoint  = module.eks.cluster_endpoint
   cluster_ca_cert   = module.eks.cluster_ca_cert
-}
-
-provider "helm" {
-  kubernetes {
-    host                   = module.eks.cluster_endpoint
-    cluster_ca_certificate = base64decode(module.eks.cluster_ca_cert)
-
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command     = "aws"
-      args        = ["eks", "get-token", "--region", var.aws_region, "--cluster-name", module.eks.cluster_name]
-    } # IAM 인증 추가
-  }
+  depends_on = [module.eks]  # ✅ EKS가 올라간 후 실행
 }

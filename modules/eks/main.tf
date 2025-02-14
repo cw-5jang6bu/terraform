@@ -77,9 +77,19 @@ resource "aws_eks_node_group" "eks_nodes" {
 
 # ✅ ArgoCD 모듈 추가 (EKS 정보 전달)
 module "argocd" {
-  source            = "./argocd"
+  source            = "../argocd"
   cluster_name      = aws_eks_cluster.eks.name
   cluster_endpoint  = aws_eks_cluster.eks.endpoint
   cluster_ca_cert   = aws_eks_cluster.eks.certificate_authority[0].data
-  depends_on        = [aws_eks_cluster.eks]
+  cluster_id = aws_eks_cluster.eks.id
 }
+
+terraform {
+  required_providers {
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.2"
+    }
+  }
+}
+

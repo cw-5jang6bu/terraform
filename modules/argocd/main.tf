@@ -1,3 +1,7 @@
+# EKS가 완전히 생성된 후 실행을 보장하는 null_resource
+resource "null_resource" "wait_for_eks" {
+  depends_on = [var.cluster_id]  # EKS가 완전히 생성된 후 실행
+}
 resource "helm_release" "argocd" {
   name       = "argocd"
   namespace  = "argocd"
@@ -17,5 +21,5 @@ resource "helm_release" "argocd" {
     value = "{--insecure}"
   }
 
-  depends_on = [var.cluster_endpoint] # EKS 클러스터가 생성된 후 실행
+  depends_on = [module.eks]  # ✅ EKS 생성 후 ArgoCD 실행
 }

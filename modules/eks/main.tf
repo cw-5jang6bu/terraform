@@ -22,7 +22,7 @@ resource "aws_eks_cluster" "eks" {
 #   node_role_arn   = aws_iam_role.eks_node_role.arn
 #   subnet_ids      = var.subnet_ids  # ✅ Private Subnet 사용
 #   instance_types = ["t3.medium"]  # ✅ 노드 인스턴스 타입 설정
-#   //capacity_type  = "SPOT"         # 💡 비용 절감을 위해 Spot 인스턴스 사용
+#   capacity_type  = "SPOT"         # 💡 비용 절감을 위해 Spot 인스턴스 사용
 #
 #   scaling_config {
 #     desired_size = 2  # 💡 기본 2개 노드

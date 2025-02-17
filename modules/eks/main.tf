@@ -1,15 +1,51 @@
+# EKS 클러스터 생성
 resource "aws_eks_cluster" "eks" {
   name     = var.cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
 
   vpc_config {
-    subnet_ids              = var.subnet_ids
-    endpoint_private_access = true  # 내부 접근 활성화
-    endpoint_public_access  = true  # 외부 접근 가능 (필요 시 false로 변경)
+    subnet_ids              = var.subnet_ids  # ✅ VPC 모듈에서 전달된 Private Subnet 사용
+    security_group_ids      = [var.security_group_id]  # ✅ VPC에서 전달된 보안 그룹 사용    endpoint_private_access = true  # ✅ 내부 통신 허용 (kubectl 등 내부 접근 가능)
+    endpoint_private_access = true # ✅ 내부 접근 가능하도록 설정
+    endpoint_public_access  = false # ✅ 외부 공개 차단 (보안 강화)
   }
 
-  depends_on = [aws_iam_role_policy_attachment.eks_cluster_policy]
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_policy
+  ]
 }
+
+# EKS Node Group 생성
+resource "aws_eks_node_group" "eks_nodes" {
+  cluster_name    = aws_eks_cluster.eks.name
+  node_group_name = "${var.cluster_name}-node-group"
+  node_role_arn   = aws_iam_role.eks_node_role.arn
+  subnet_ids      = var.subnet_ids  # ✅ Private Subnet 사용
+  instance_types = ["t3.medium"]  # ✅ 노드 인스턴스 타입 설정
+  //capacity_type  = "SPOT"         # 💡 비용 절감을 위해 Spot 인스턴스 사용
+
+  scaling_config {
+    desired_size = 2  # 💡 기본 2개 노드
+    min_size     = 1
+    max_size     = 5
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  remote_access {
+    ec2_ssh_key = var.ssh_key_name
+    source_security_group_ids = [var.eks_node_sg_id]
+  }
+
+  depends_on = [
+    aws_eks_cluster.eks,
+    aws_iam_role_policy_attachment.eks_worker_node_policy
+  ]
+}
+
+# EKS 클러스터용 IAM 역할 생성
 resource "aws_iam_role" "eks_cluster_role" {
   name = "${var.cluster_name}-eks-cluster-role"
 
@@ -23,10 +59,13 @@ resource "aws_iam_role" "eks_cluster_role" {
   })
 }
 
+# EKS 클러스터 IAM 역할에 정책 연결
 resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
   role       = aws_iam_role.eks_cluster_role.name
 }
+
+# EKS Node Group IAM 역할 생성
 resource "aws_iam_role" "eks_node_role" {
   name = "${var.cluster_name}-eks-node-role"
 
@@ -40,6 +79,7 @@ resource "aws_iam_role" "eks_node_role" {
   })
 }
 
+# EKS Node Group IAM 역할에 정책 연결
 resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
   role       = aws_iam_role.eks_node_role.name
@@ -56,40 +96,5 @@ resource "aws_iam_role_policy_attachment" "eks_ec2_container_registry" {
 }
 
 
-resource "aws_eks_node_group" "eks_nodes" {
-  cluster_name    = aws_eks_cluster.eks.name
-  node_group_name = "${var.cluster_name}-node-group"
-  node_role_arn   = aws_iam_role.eks_node_role.arn
-  subnet_ids      = var.subnet_ids
 
-  instance_types = [var.node_type]
-
-  scaling_config {
-    desired_size = var.node_count
-    min_size     = 1
-    max_size     = 5
-  }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_worker_node_policy
-  ]
-}
-
-# ✅ ArgoCD 모듈 추가 (EKS 정보 전달)
-module "argocd" {
-  source            = "../argocd"
-  cluster_name      = aws_eks_cluster.eks.name
-  cluster_endpoint  = aws_eks_cluster.eks.endpoint
-  cluster_ca_cert   = aws_eks_cluster.eks.certificate_authority[0].data
-  cluster_id = aws_eks_cluster.eks.id
-}
-
-terraform {
-  required_providers {
-    null = {
-      source  = "hashicorp/null"
-      version = "~> 3.2"
-    }
-  }
-}
 

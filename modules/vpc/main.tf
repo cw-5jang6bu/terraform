@@ -195,28 +195,28 @@ resource "aws_security_group" "eks_node_sg" {
   }
 }
 
-# # 보안 그룹 생성 - ElastiCache
-# resource "aws_security_group" "cache_sg" {
-#   vpc_id = aws_vpc.main.id
-#
-#   ingress {
-#     from_port       = 6379
-#     to_port         = 6379
-#     protocol        = "tcp"
-#     security_groups = [aws_security_group.eks_sg.id]
-#   }
-#
-#   egress {
-#     from_port   = 0
-#     to_port     = 0
-#     protocol    = "-1"
-#     cidr_blocks = ["0.0.0.0/0"]
-#   }
-#
-#   tags = {
-#     Name = "cache-sg"
-#   }
-# }
+# 보안 그룹 생성 - ElastiCache
+resource "aws_security_group" "cache_sg" {
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    from_port       = 6379
+    to_port         = 6379
+    protocol        = "tcp"
+    security_groups = [aws_security_group.eks_sg.id]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "cache-sg"
+  }
+}
 
 
 

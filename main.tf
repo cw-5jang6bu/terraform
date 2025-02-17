@@ -2,6 +2,13 @@ provider "aws" {
   region = var.aws_region
 }
 
+# module "s3_bucket" {
+#   source       = "./modules/s3"
+#   bucket_name  = "ojang-terraform-state"
+#   acl          = "private"
+#   versioning   = true
+# }
+
 # VPC 모듈 (서브넷, NAT, 보안 그룹 포함)
 module "vpc" {
   source              = "./modules/vpc"
@@ -13,14 +20,14 @@ module "vpc" {
 }
 
 #EKS 모듈 (EKS 클러스터 + Node Group)
-module "eks" {
-  source             = "./modules/eks"
-  cluster_name       = "eks-cluster"
-  subnet_ids         = module.vpc.private_subnet_eks
-  security_group_id  = module.vpc.eks_sg_id
-  eks_node_sg_id     = module.vpc.eks_node_sg_id
-  depends_on         = [module.vpc]  # ✅ VPC 생성 후 EKS 실행
-}
+# module "eks" {
+#   source             = "./modules/eks"
+#   cluster_name       = "eks-cluster"
+#   subnet_ids         = module.vpc.private_subnet_eks
+#   security_group_id  = module.vpc.eks_sg_id
+#   eks_node_sg_id     = module.vpc.eks_node_sg_id
+#   depends_on         = [module.vpc]  # ✅ VPC 생성 후 EKS 실행
+# }
 #
 # RDS 모듈 (Aurora Serverless v2)
 module "rds" {
@@ -34,13 +41,13 @@ module "rds" {
 }
 
 #
-# # ElastiCache 모듈 (Redis Cluster)
-# module "elasticache" {
-#   source             = "./modules/elasticache"
-#   cache_cluster_id   = "redis-cluster"
-#   subnet_ids         = module.vpc.private_subnet_db
-#   security_group_ids = [module.vpc.cache_sg_id] # ✅ 리스트로 변환
-#   depends_on         = [module.vpc]  # ✅ VPC 생성 후 실행
-# }
+# ElastiCache 모듈 (Redis Cluster)
+module "elasticache" {
+  source             = "./modules/elasticache"
+  cache_cluster_id   = "redis-cluster"
+  subnet_ids         = module.vpc.private_subnet_db
+  security_group_ids = module.vpc.cache_sg_id # ✅ 리스트로 변환
+  depends_on         = [module.vpc]  # ✅ VPC 생성 후 실행
+}
 
 

@@ -23,17 +23,17 @@ output "db_sg_id" {
   value       = aws_security_group.db_sg.id
 }
 
-# output "cache_sg_id" {
-#   description = "ElastiCache 보안 그룹 ID 리스트"
-#   value       = [aws_security_group.cache_sg.id]  # ✅ 리스트로 출력 보장
-# }
+output "cache_sg_id" {
+  description = "ElastiCache 보안 그룹 ID 리스트"
+  value       = [aws_security_group.cache_sg.id]  # ✅ 리스트로 출력 보장
+}
 
 output "eks_node_sg_id" {
   description = "EKS Node Security Group Id"
   value       = aws_security_group.eks_node_sg.id
 }
-# output "rds_subnet_ids" {
-#   description = "RDS용 subnet의 ids"
-#   value = [aws_subnet.private_db.id]
-# }
+output "rds_subnet_ids" {
+  description = "RDS용 subnet의 ids"
+  value = aws_subnet.private_db[*].id
+}
 

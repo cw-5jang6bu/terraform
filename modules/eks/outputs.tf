@@ -18,8 +18,8 @@ output "cluster_ca_cert" {
   value       = aws_eks_cluster.eks.certificate_authority[0].data
 }
 
-output "node_group_arn" {
-  description = "EKS 노드 그룹 ARN"
-  value       = aws_eks_node_group.eks_nodes.arn
-}
+# output "node_group_arn" {
+#   description = "EKS 노드 그룹 ARN"
+#   value       = aws_eks_node_group.eks_nodes.arn
+# }
 

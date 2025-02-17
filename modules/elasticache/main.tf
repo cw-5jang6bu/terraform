@@ -8,20 +8,29 @@ resource "aws_elasticache_subnet_group" "cache" {
   }
 }
 
-resource "aws_elasticache_replication_group" "redis" {
-  replication_group_id          = var.cache_cluster_id
-  description                   = "Redis Replication Group for High Availability"
-  engine                        = "redis"
-  engine_version                = "6.x"
-  node_type                     = "cache.t4g.micro"
-  parameter_group_name          = "default.redis6.x"
-  port                          = 6379
-  automatic_failover_enabled    = true
-  multi_az_enabled              = true
-  security_group_ids            = var.security_group_ids
-  subnet_group_name             = aws_elasticache_subnet_group.cache.name
-  num_node_groups         = 2  # ✅ Multi-AZ 구성 (샤드 개수)
-  replicas_per_node_group = 1  # ✅ 각 샤드당 리플리카 개수
+resource "aws_elasticache_parameter_group" "redis_cluster" {
+  name   = "redis-cluster-param-group"
+  family = "redis6.x"
 
-  depends_on = [aws_elasticache_subnet_group.cache]
+  parameter {
+    name  = "cluster-enabled"
+    value = "yes"
+  }
 }
+
+resource "aws_elasticache_replication_group" "redis" {
+  replication_group_id      = "redis-cluster"
+  description               = "Redis Replication Group for High Availability"
+  engine                    = "redis"
+  engine_version            = "6.x"
+  node_type                 = "cache.t4g.micro"
+  parameter_group_name      = aws_elasticache_parameter_group.redis_cluster.name  # ✅ 클러스터 활성화된 파라미터 그룹 사용
+  port                      = 6379
+  num_node_groups           = 2  # ✅ 2개 이상의 노드 그룹 사용 가능
+  replicas_per_node_group   = 1
+  automatic_failover_enabled = true
+  multi_az_enabled          = true
+  security_group_ids        = var.security_group_ids
+  subnet_group_name         = aws_elasticache_subnet_group.cache.name
+}
+

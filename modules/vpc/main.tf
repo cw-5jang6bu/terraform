@@ -227,7 +227,7 @@ resource "aws_security_group" "cache_sg" {
 }
 
 
-resource "aws_security_group" "lambda_sg" {
+resource "aws_security_group" "lamda_sg" {
   name_prefix = "lambda-sg-"
   vpc_id      = aws_vpc.main.id
 

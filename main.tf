@@ -44,7 +44,7 @@ module "alb" {
   source           = "./modules/alb"
   alb_name         = "eks-alb"
   vpc_id           = module.vpc.vpc_id
-  public_subnet_ids = module.vpc.ublic_subnet_idsp
+  public_subnet_ids = [module.vpc.public_subnet_ids]
   alb_security_group = module.vpc.alb_sg_id
 }
 
@@ -57,6 +57,13 @@ module "argocd" {
   cluster_endpoint  = module.eks.cluster_endpoint
   cluster_ca_cert   = module.eks.cluster_ca_cert
   depends_on        = [module.eks]
+}
+
+module "lamda" {
+  source             = "./modules/lamda"
+  private_subnet_ids = [module.vpc.private_subnet_eks]
+  lamda_sg_id        = module.vpc.lamda_sg_id
+  cache_endpoint     = module.elasticache.redis_primary_endpoint
 }
 
 

@@ -20,12 +20,13 @@ resource "aws_internet_gateway" "igw" {
 
 # NAT Gateway용 Elastic IP (AZ 수만큼 생성)
 resource "aws_eip" "nat" {
-  count = min(length(aws_subnet.public), 2)  # ✅ 최대 2개까지만 생성하여 AWS 기본 제한 내에서 관리
+  count = length(aws_subnet.public)  # ✅ 최대 2개까지만 생성하여 AWS 기본 제한 내에서 관리
+  domain = "vpc"
 }
 
 # NAT Gateway 생성 (Private Subnet의 인터넷 연결용)
 resource "aws_nat_gateway" "nat" {
-  count         = min(length(aws_subnet.public), 2)  # ✅ Public Subnet 개수와 AWS 제한을 고려하여 NAT Gateway 배포
+  count         = length(aws_subnet.public)  # ✅ Public Subnet 개수와 AWS 제한을 고려하여 NAT Gateway 배포
   allocation_id = aws_eip.nat[count.index].id
   subnet_id     = aws_subnet.public[count.index].id
 
@@ -86,7 +87,7 @@ resource "aws_route_table" "private_nat_eks" {
 
  route {
    cidr_block     = "0.0.0.0/0"
-   nat_gateway_id = aws_nat_gateway.nat[count.index].id  # ✅ 해당 AZ의 NAT Gateway와 연결
+   nat_gateway_id = aws_nat_gateway.nat[count.index % length(aws_nat_gateway.nat)].id  # ✅ 해당 AZ의 NAT Gateway와 연결
  }
 
  tags = {
@@ -144,10 +145,9 @@ resource "aws_security_group" "eks_node_sg" {
 
 # ✅ EKS 컨트롤 플레인 → 노드 그룹 통신 허용
 resource "aws_security_group_rule" "eks_to_nodes" {
-  count                    = length(aws_security_group.eks_sg.ingress) == 0 ? 1 : 0  # ✅ 중복 방지
  type                     = "ingress"
- from_port                = 10250
- to_port                  = 10250
+ from_port                = 443
+ to_port                  = 443
  protocol                 = "tcp"
  security_group_id        = aws_security_group.eks_node_sg.id
  source_security_group_id = aws_security_group.eks_sg.id
@@ -156,8 +156,8 @@ resource "aws_security_group_rule" "eks_to_nodes" {
 # ✅ EKS 노드 그룹 → 컨트롤 플레인 통신 허용
 resource "aws_security_group_rule" "eks_to_cluster" {
  type                     = "ingress"
- from_port                = 443
- to_port                  = 443
+ from_port                = 10250
+ to_port                  = 10250
  protocol                 = "tcp"
  security_group_id        = aws_security_group.eks_sg.id
  source_security_group_id = aws_security_group.eks_node_sg.id

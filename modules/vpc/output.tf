@@ -37,4 +37,3 @@ output "rds_subnet_ids" {
   description = "RDS용 subnet의 ids"
   value = aws_subnet.private_db[*].id
 }
-

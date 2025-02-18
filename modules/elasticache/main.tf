@@ -30,7 +30,10 @@ resource "aws_elasticache_replication_group" "redis" {
   replicas_per_node_group   = 1
   automatic_failover_enabled = true
   multi_az_enabled          = true
-  security_group_ids        = var.security_group_ids
+  security_group_ids = [
+    aws_security_group.redis_sg.id,
+    aws_security_group.lambda_sg.id,  
+  ]
   subnet_group_name         = aws_elasticache_subnet_group.cache.name
 }
 

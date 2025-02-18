@@ -3,6 +3,7 @@ provider "aws" {
 }
 data "aws_eks_cluster" "default" {
   name = module.eks.cluster_name
+  depends_on = [aws_eks_cluster.eks]
 }
 
 data "aws_eks_cluster_auth" "default" {

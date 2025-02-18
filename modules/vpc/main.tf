@@ -84,7 +84,7 @@ resource "aws_route_table" "private_nat_eks" {
 
  route {
    cidr_block     = "0.0.0.0/0"
-   nat_gateway_id = [aws_nat_gateway.nat[count.index].id % length(aws_nat_gateway.nat)].id  # ✅ 해당 AZ의 NAT Gateway와 연결
+   nat_gateway_id = aws_nat_gateway.nat[count.index % length(aws_nat_gateway.nat)].id  # ✅ 해당 AZ의 NAT Gateway와 연결
  }
 
  tags = {

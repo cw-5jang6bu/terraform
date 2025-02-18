@@ -10,6 +10,7 @@ module "vpc" {
   private_subnet_eks  = ["10.0.2.0/24", "10.0.21.0/24"]  # ✅ EKS 용 Private Subnet
   private_subnet_db   = ["10.0.3.0/24", "10.0.31.0/24"]  # ✅ RDS & ElastiCache 용
   availability_zones  = ["ap-northeast-2a", "ap-northeast-2c"]
+  eks_cluster_name    = module.eks.cluster_name
 }
 
 # ✅ EKS 모듈 (EKS 클러스터 + Node Group)
@@ -20,6 +21,7 @@ module "eks" {
   security_group_id  = module.vpc.eks_sg_id
   eks_node_sg_id     = module.vpc.eks_node_sg_id
   depends_on         = [module.vpc]  # ✅ VPC 생성 후 EKS 실행
+  aws_region         = var.aws_region
 }
 
 # ✅ RDS 모듈 (Aurora Serverless v2)
@@ -41,6 +43,15 @@ module "elasticache" {
   security_group_ids = module.vpc.cache_sg_id  # ✅ 리스트로 변환
   depends_on         = [module.vpc]
 }
+
+module "alb" {
+  source           = "./modules/alb"
+  alb_name         = "eks-alb"
+  vpc_id           = module.vpc.vpc_id
+  public_subnet_ids = module.vpc.ublic_subnet_idsp
+  alb_security_group = module.vpc.alb_sg_id
+}
+
 
 # ✅ ArgoCD 배포 (Helm 사용)
 module "argocd" {

@@ -1,54 +1,40 @@
-resource "aws_lb" "main" {
-  name               = "olive-young-alb"
-  internal           = false
+resource "aws_lb" "eks_alb" {
+  name               = var.alb_name
+  internal           = false  # ✅ 외부에서 접근 가능하도록 설정 (Public ALB)
   load_balancer_type = "application"
-  security_groups    = [var.security_group_id]
-  subnets           = var.subnets
+  security_groups    = [var.alb_security_group]
+  subnets           = var.public_subnet_ids
 
-  enable_deletion_protection = false
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
+  tags = {
+    Name = var.alb_name
   }
 }
 
-resource "aws_lb_listener" "https" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = 443
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = var.certificate_arn
-
-  default_action {
-    type = "forward"
-    target_group_arn = aws_lb_target_group.main.arn
-  }
-}
-
-resource "aws_lb_target_group" "main" {
-  name        = "olive-young-tg"
+# ✅ Target Group 생성 (EKS 서비스와 연결)
+resource "aws_lb_target_group" "eks_target_group" {
+  name        = "eks-target-group"
   port        = 80
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
-  target_type = "ip"
+  target_type = "ip"  # ✅ EKS Pod를 대상으로 지정 (EKS는 'instance'가 아닌 'ip' 사용)
 
   health_check {
-    path                = "/health"
+    path                = "/"
     interval            = 30
     timeout             = 5
     healthy_threshold   = 2
     unhealthy_threshold = 2
+  }
+}
+
+# ✅ ALB Listener 생성 (HTTP 80번 포트 오픈)
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.eks_alb.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.eks_target_group.arn
   }
 }

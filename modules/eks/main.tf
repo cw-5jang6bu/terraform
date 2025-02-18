@@ -24,7 +24,7 @@ resource "aws_eks_node_group" "eks_nodes" {
   instance_types = ["t3.medium"]  # ✅ 노드 인스턴스 타입 설정
 
   ami_type        = "AL2_x86_64"  # ✅ Amazon Linux 2 기반 AMI 사용
-  capacity_type  = "SPOT"         # 💡 비용 절감을 위해 Spot 인스턴스 사용
+  capacity_type  = "ON_DEMAND"         # 💡 비용 절감을 위해 Spot 인스턴스 사용
 
   scaling_config {
     desired_size = 2  # 💡 기본 2개 노드

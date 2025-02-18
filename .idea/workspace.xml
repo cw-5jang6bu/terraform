@@ -5,13 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f153efb3-8f1c-4169-9823-b62ffad1bccf" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/terraform.tfstate" beforeDir="false" afterPath="$PROJECT_DIR$/terraform.tfstate" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/terraform.tfstate.backup" beforeDir="false" afterPath="$PROJECT_DIR$/terraform.tfstate.backup" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/terraform.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/terraform.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend.tf" beforeDir="false" afterPath="$PROJECT_DIR$/backend.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/main.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/argocd/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/argocd/main.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/argocd/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/argocd/variables.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/eks/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/eks/main.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/eks/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/eks/variables.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/vpc/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/vpc/main.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/vpc/output.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/vpc/output.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform.tfstate" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform.tfstate.1739520099.backup" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/terraform.tfstate.backup" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+        <option value="Empty File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -82,6 +101,9 @@
       <workItem from="1739491634020" duration="20428000" />
       <workItem from="1739721663901" duration="1543000" />
       <workItem from="1739723215291" duration="4652000" />
+      <workItem from="1739773688750" duration="22003000" />
+      <workItem from="1739837898290" duration="1501000" />
+      <workItem from="1739841562324" duration="603000" />
     </task>
     <servers />
   </component>

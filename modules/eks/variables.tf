@@ -4,22 +4,16 @@ variable "cluster_name" {
 }
 
 variable "subnet_ids" {
-  description = "EKS가 배포될 Private Subnet 리스트"
+  description = "EKS 클러스터가 사용할 서브넷 목록 (Private Subnet)"
   type        = list(string)
 }
 
 variable "security_group_id" {
-  description = "EKS에 적용할 보안 그룹 ID"
+  description = "EKS 클러스터에 사용할 보안 그룹 ID"
   type        = string
-}
-
-variable "ssh_key_name" {
-  description = "EC2 SSH Key Name for EKS nodes"
-  type        = string
-  default     = "dev-keypair"
 }
 
 variable "eks_node_sg_id" {
-  description = "EKS Node Security group Id"
+  description = "EKS 노드 그룹에 사용할 보안 그룹 ID"
   type        = string
 }

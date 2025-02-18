@@ -40,13 +40,13 @@ resource "aws_dynamodb_table" "terraform_lock" {
   }
 }
 
-# terraform {
-#   backend "s3" {
-#     bucket         = "ojang-terraform-state"  # ✅ S3에 상태 저장
-#     key            = "terraform.tfstate"  # ✅ 저장할 state 파일 이름
-#     region         = "ap-northeast-2"  # ✅ 서울 리전
-#     encrypt        = true  # ✅ 데이터 암호화
-#     dynamodb_table = "terraform-lock"  # ✅ DynamoDB를 사용한 Locking (충돌 방지)
-#   }
-# }
+terraform {
+  backend "s3" {
+    bucket         = "ojang-terraform-state"  # ✅ S3에 상태 저장
+    key            = "terraform.tfstate"  # ✅ 저장할 state 파일 이름
+    region         = "ap-northeast-2"  # ✅ 서울 리전
+    encrypt        = true  # ✅ 데이터 암호화
+    dynamodb_table = "terraform-lock"  # ✅ DynamoDB를 사용한 Locking (충돌 방지)
+  }
+}
 

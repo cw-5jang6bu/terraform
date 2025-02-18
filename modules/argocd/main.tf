@@ -9,17 +9,16 @@ resource "helm_release" "argocd" {
 
   set {
     name  = "server.service.type"
-    value = "LoadBalancer"
+    value = "LoadBalancer"  # ✅ 외부에서 접속 가능하도록 설정
   }
 
   set {
     name  = "server.extraArgs"
-    value = "{--insecure}"
+    value = "{--insecure}"  # ✅ HTTPS 인증서 검증 비활성화 (테스트용)
   }
 
-  depends_on = [
-    var.cluster_id,
-    var.c
-  ]
+  depends_on = [var.cluster_id]
 }
+
+
 

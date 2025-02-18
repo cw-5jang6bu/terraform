@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-
 # ✅ VPC 모듈 (서브넷, NAT, 보안 그룹 포함)
 module "vpc" {
   source              = "./modules/vpc"
@@ -37,7 +33,7 @@ module "rds" {
 module "elasticache" {
   source             = "./modules/elasticache"
   cache_cluster_id   = "redis-cluster"
-  subnet_ids         = module.vpc.private_subnet_db
+  subnet_ids         = module.vpc.private_subnet_eks # 원래 구성도 같이 eks 서브넷에 붙이기
   security_group_ids = module.vpc.cache_sg_id  # ✅ 리스트로 변환
   depends_on         = [module.vpc]
 }

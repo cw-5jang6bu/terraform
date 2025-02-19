@@ -30,13 +30,13 @@ resource "aws_s3_bucket_public_access_block" "s3_public_block" {
 }
 
 # ✅ DynamoDB 테이블 생성 (Terraform Locking)
-resource "aws_dynamodb_table" "terraform_lock" {
-  name         = "terraform-lock"
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
+# resource "aws_dynamodb_table" "terraform_lock" {
+#   name         = "terraform-lock"
+#   billing_mode = "PAY_PER_REQUEST"
+#   hash_key     = "LockID"
 
-  attribute {
-    name = "LockID"
-    type = "S"
-  }
-}
+#   attribute {
+#     name = "LockID"
+#     type = "S"
+#   }
+# }

@@ -48,7 +48,7 @@ output "rds_subnet_ids" {
   value = aws_subnet.private_db[*].id
 }
 
-output "lamda_sg_id" {
-  description = "Lamda의 Security의 Id"
-  value       = aws_security_group.lamda_sg.id
+output "lambda_sg_id" {
+  description = "Lambda의 Security의 Id"
+  value       = aws_security_group.lambda_sg.id
 }

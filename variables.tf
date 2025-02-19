@@ -11,11 +11,11 @@ variable "availability_zones" {
 }
 
 
-variable "cluster_name" {
-  description = "EKS 클러스터 이름"
-  type        = string
-  default     = "eks-prod-test-cluster-v1"
-}
+# variable "cluster_name" {
+#   description = "EKS 클러스터 이름"
+#   type        = string
+#   default     = "eks-prod-test-cluster-v1"
+# }
 
 variable "node_count" {
   description = "EKS 노드 개수"

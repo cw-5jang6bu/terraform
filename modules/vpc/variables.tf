@@ -22,10 +22,10 @@ variable "availability_zones" {
   description = "배포할 가용 영역 리스트"
   type        = list(string)
 }
-variable "eks_cluster_name" {
-  description = "EKS Cluster Name"
-  type        = string
-}
+# variable "eks_cluster_name" {
+#   description = "EKS Cluster Name"
+#   type        = string
+# }
 
 variable "allowed_cidrs" {
   description = "EKS에 접근 가능한 CIDR 리스트"

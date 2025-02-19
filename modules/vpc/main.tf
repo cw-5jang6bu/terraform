@@ -46,8 +46,8 @@ resource "aws_subnet" "public" {
 
   tags = {
     Name                                      = "public-subnet-${count.index}"
-    "kubernetes.io/cluster/${var.eks_cluster_name}" = "owned"  # ✅ EKS 클러스터에 연결됨을 표시
-    "kubernetes.io/role/elb"                   = "1"       # ✅ 외부 로드밸런서 (ALB) 배포 가능
+    # "kubernetes.io/cluster/${var.eks_cluster_name}" = "owned"  # ✅ EKS 클러스터에 연결됨을 표시
+    # "kubernetes.io/role/elb"                   = "1"       # ✅ 외부 로드밸런서 (ALB) 배포 가능
   }
 }
 
@@ -61,8 +61,8 @@ resource "aws_subnet" "private_eks" {
 
   tags = {
     Name = "private-eks-subnet-${count.index}"
-    "kubernetes.io/role/internal-elb" = "1"  # ✅ EKS가 내부 로드밸런서를 사용할 수 있도록 설정
-    "kubernetes.io/cluster/${var.eks_cluster_name}" = "owned"
+    # "kubernetes.io/role/internal-elb" = "1"  # ✅ EKS가 내부 로드밸런서를 사용할 수 있도록 설정
+    # "kubernetes.io/cluster/${var.eks_cluster_name}" = "owned"
   }
 }
 
@@ -227,7 +227,7 @@ resource "aws_security_group" "cache_sg" {
 }
 
 
-resource "aws_security_group" "lamda_sg" {
+resource "aws_security_group" "lambda_sg" {
   name_prefix = "lambda-sg-"
   vpc_id      = aws_vpc.main.id
 

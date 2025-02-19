@@ -7,8 +7,11 @@
     <list default="true" id="f153efb3-8f1c-4169-9823-b62ffad1bccf" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/main.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/eks/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/eks/main.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/elasticache/outputs.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/elasticache/outputs.tf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/vpc/main.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/vpc/main.tf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/vpc/output.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/vpc/output.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/vpc/variables.tf" beforeDir="false" afterPath="$PROJECT_DIR$/modules/vpc/variables.tf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/provider.tf" beforeDir="false" afterPath="$PROJECT_DIR$/provider.tf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -71,6 +74,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/modules/lamda" />
       <recent name="$PROJECT_DIR$/modules" />
     </key>
   </component>
@@ -101,6 +105,8 @@
       <workItem from="1739842178155" duration="14700000" />
       <workItem from="1739861998937" duration="1154000" />
       <workItem from="1739863168085" duration="185000" />
+      <workItem from="1739863391124" duration="11231000" />
+      <workItem from="1739884987204" duration="2338000" />
     </task>
     <servers />
   </component>

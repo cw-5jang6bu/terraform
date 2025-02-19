@@ -1,25 +1,40 @@
 variable "db_name" {
-  description = "RDS 데이터베이스 이름"
-  type        = string
+  description = "db name"
 }
 
-variable "security_group_ids" {
-  description = "RDS에 적용할 보안 그룹 ID"
-  type        = list(string)
+variable "db_username" {
+  description = "db username"
 }
 
-variable "master_username" {
-  description = "RDS에 적용할 username"
-  type        = string
+variable "db_password" {
+  description = "db password"
 }
 
-variable "master_password" {
-  description = "RDS에 적용할 password"
-  type        = string
+variable "private_subnet_db_ids" {
+  description = "private subnet db ids"
 }
 
-variable "rds_subnet_ids" {
-  description = "RDS용 private_subnet_ids"
-  type        = list(string)
+variable "vpc_id" {
+  description = "Id of vpc for db instance"
 }
+
+variable "rds_sg_id" {
+  description = "rds sg id"
+}
+
+# variable "vpc_security_group_ids_rds" {
+#   description = "ID for security group for rds"
+# }
+
+# variable "elasticache_sg_id" {
+#   description = "elasticache sg ids"
+# }
+#
+# variable "eks_sg_id" {
+#   description = "eks sg id"
+# }
+
+
+
+
 

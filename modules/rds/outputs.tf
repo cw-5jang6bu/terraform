@@ -8,7 +8,12 @@ output "rds_cluster_id" {
   value       = aws_rds_cluster.aurora.id
 }
 
-output "db_subnet_group_name" {
-  description = "RDS Subnet Group 이름"
-  value       = aws_db_subnet_group.db.name
-}
+# output "rds_sg_id" {
+#   description = "RDS sg Id"
+#   value       = aws_security_group.rds_sg.id
+# }
+
+# output "db_subnet_group_name" {
+#   description = "RDS Subnet Group 이름"
+#   value       = aws_db_subnet_group.db.name
+# }

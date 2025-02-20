@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql-test
+  namespace: default
+spec:
+  containers:
+    - name: mysql-client
+      image: mysql:8.0  # MySQL 클라이언트가 포함된 컨테이너
+      command: ["sleep", "3600"]  # Pod가 종료되지 않도록 유지
+      resources:
+        limits:
+          memory: "128Mi"
+          cpu: "100m"
+

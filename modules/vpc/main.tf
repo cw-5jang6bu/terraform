@@ -216,4 +216,15 @@ resource "aws_security_group_rule" "eks_api_ingress" {
   description       = "Allow kubectl access to EKS API server"
 }
 
+# EKS Control Plane -> Worker Node (다양한 포트 필요)
+resource "aws_security_group_rule" "controlplane_to_worker" {
+  type                     = "ingress"
+  from_port                = 1025
+  to_port                  = 65535
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.eks_sg.id
+  source_security_group_id = aws_security_group.eks_sg.id  # 혹은 EKS cluster SG
+  description              = "Allow EKS Control Plane to communicate with nodes"
+}
+
 

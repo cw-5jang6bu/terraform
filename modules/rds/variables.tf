@@ -22,19 +22,6 @@ variable "rds_sg_id" {
   description = "rds sg id"
 }
 
-# variable "vpc_security_group_ids_rds" {
-#   description = "ID for security group for rds"
-# }
-
-# variable "elasticache_sg_id" {
-#   description = "elasticache sg ids"
-# }
-#
-# variable "eks_sg_id" {
-#   description = "eks sg id"
-# }
-
-
 
 
 

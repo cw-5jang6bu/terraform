@@ -140,30 +140,28 @@ resource "aws_subnet" "private_db" {
   }
 }
 
-# EKS SG (규칙 없음)
+# ✅ EKS 보안 그룹 (Worker Nodes용)
 resource "aws_security_group" "eks_sg" {
   name        = "eks-sg"
-  description = "SG for EKS (no rules yet)"
+  description = "Security Group for EKS Worker Nodes"
   vpc_id      = aws_vpc.main.id
-
-  # 규칙 없이 생성 (aws_security_group_rule를 통해 규칙 추가 예정)
 }
 
-# RDS SG (규칙 없음)
+# ✅ RDS 보안 그룹
 resource "aws_security_group" "rds_sg" {
   name        = "rds-sg"
-  description = "SG for RDS (no rules yet)"
+  description = "Security Group for RDS"
   vpc_id      = aws_vpc.main.id
 }
 
-# ElastiCache SG (규칙 없음)
+# ✅ ElastiCache 보안 그룹
 resource "aws_security_group" "elasticache_sg" {
   name        = "elasticache-sg"
-  description = "SG for ElastiCache (no rules yet)"
+  description = "Security Group for ElastiCache"
   vpc_id      = aws_vpc.main.id
 }
 
-# eks -> rds
+# ✅ EKS → RDS (MySQL 3306) 허용 (egress만 필요)
 resource "aws_security_group_rule" "eks_to_rds_mysql" {
   type                     = "egress"
   from_port                = 3306
@@ -171,20 +169,10 @@ resource "aws_security_group_rule" "eks_to_rds_mysql" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_sg.id
   source_security_group_id = aws_security_group.rds_sg.id
+  description              = "Allow EKS to access RDS MySQL"
 }
 
-# rds -> eks
-resource "aws_security_group_rule" "rds_in_from_eks_mysql" {
-  type                     = "ingress"
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.rds_sg.id
-  source_security_group_id = aws_security_group.eks_sg.id
-  description              = "Allow MySQL access from EKS to RDS"
-}
-
-# eks -> redis
+# ✅ EKS → Redis (6379) 허용 (egress만 필요)
 resource "aws_security_group_rule" "eks_to_redis" {
   type                     = "egress"
   from_port                = 6379
@@ -192,64 +180,40 @@ resource "aws_security_group_rule" "eks_to_redis" {
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_sg.id
   source_security_group_id = aws_security_group.elasticache_sg.id
-
+  description              = "Allow EKS to access Redis"
 }
 
-# resource "aws_security_group_rule" "eks_api_ingress" {
-#   type              = "ingress"
-#   from_port         = 443
-#   to_port           = 443
-#   protocol          = "tcp"
-#   security_group_id = aws_security_group.eks_sg.id
-#   cidr_blocks       = ["0.0.0.0/0"]  # 보안을 위해 특정 IP로 제한 가능
-#   description       = "Allow kubectl access to EKS API server"
-# } -> 이거 처음 돌릴 때 주석 해제
-
-
-# redis -> eks
-resource "aws_security_group_rule" "redis_in_from_eks" {
-  type                     = "ingress"
-  from_port                = 6379
-  to_port                  = 6379
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.elasticache_sg.id
-  source_security_group_id = aws_security_group.eks_sg.id
-  description              = "Allow Redis inbound from EKS"
-}
-
-
-# rds -> redis
-resource "aws_security_group_rule" "rds_out_to_redis" {
+# ✅ RDS → Redis (6379) 허용 (egress만 필요)
+resource "aws_security_group_rule" "rds_to_redis" {
   type                     = "egress"
   from_port                = 6379
   to_port                  = 6379
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds_sg.id
   source_security_group_id = aws_security_group.elasticache_sg.id
-
+  description              = "Allow RDS to access Redis"
 }
 
-# redis -> rds
-resource "aws_security_group_rule" "redis_in_from_rds" {
-  type                     = "ingress"
-  from_port                = 6379
-  to_port                  = 6379
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.elasticache_sg.id
-  source_security_group_id = aws_security_group.rds_sg.id
-  description              = "Allow Redis inbound from RDS"
-}
-
-# eks -> NatGateway
+# ✅ EKS가 인터넷으로 나갈 수 있도록 NAT Gateway 허용 (EKS가 인터넷 연결 필요 시)
 resource "aws_security_group_rule" "eks_egress_internet" {
-  type               = "egress"
-  from_port          = 0
-  to_port            = 0
-  protocol           = "-1"
-  security_group_id  = aws_security_group.eks_sg.id
-  cidr_blocks        = ["0.0.0.0/0"]
-
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.eks_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+  description       = "Allow EKS worker nodes to access the Internet via NAT Gateway"
 }
 
+# ✅ EKS API 서버와의 통신을 위한 보안 그룹 규칙 추가 (kubectl용)
+resource "aws_security_group_rule" "eks_api_ingress" {
+  type              = "ingress"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  security_group_id = aws_security_group.eks_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]  # 보안을 위해 특정 IP로 제한 가능
+  description       = "Allow kubectl access to EKS API server"
+}
 
 

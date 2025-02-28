@@ -7,6 +7,8 @@
 - Public subnet에 NAT Gateway를 생성
 - 각 subnet과 module의 security group 구성
 
+---
+
 #### Module 구성
 - 두 AZ에 각각 EKS, Elaticache, RDS 구성을 Module을 통해 자동화
 
@@ -18,6 +20,8 @@
 
 ###### Aurora
 - Aurora를 두 AZ의 Aurora 전용 Private subnet에 한 개의 Primary와 한 개의 Replica로 생성
+
+---
 
 #### 관련 사진 첨부
 
